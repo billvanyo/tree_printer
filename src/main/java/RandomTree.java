@@ -56,7 +56,6 @@ public class RandomTree {
         else {
             int treeSize = lastValue - firstValue + 1;
             int leftCount = r.nextInt(treeSize);
-            int rightCount = treeSize - leftCount - 1;
             TreeNode root = new TreeNode(firstValue + leftCount);
             root.setLeft(randomTree(firstValue, firstValue + leftCount - 1));
             root.setRight(randomTree(firstValue + leftCount + 1, lastValue));
