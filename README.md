@@ -1,29 +1,74 @@
 # tree_printer
+
 A Java class for printing binary trees as ASCII text
 
-It hasn't been optimized for run time efficiency, but since we're talking about printing in ASCII, I figured it's not going to be used on very large trees.  It does have some nice features though.
+It hasn't been optimized for run time efficiency, but since we're talking about printing in ASCII, I figured it's not going to be used on very large trees. It does have some nice features though.
 
- 1. It makes efficient use of space in that a large subtree extends under a smaller one as much as possible.
- 2. It's generic, working for any binary tree data objects, as long as you can provide functions (lambda functions will do) to get a nodes label as a String, and to get the left and right sub-nodes.
- 3. There's a parameter to set the minimum horizontal space between node labels.
- 4. Node labels are strings of arbitrary length.
- 5. In addition to a method for printing a single tree, there's a method for printing a list of trees horizontally across the page (with a parameter for page width), using as many rows as necessary.
- 6. There's an option to print trees with diagonal branches (using slash and backslash characters) or with horizontal branches (using ascii box drawing characters). The latter is more compact and makes tree levels more visually clear.
- 7. It works.
+1. It makes efficient use of space in that a large subtree extends under a smaller one as much as possible.
+2. It's generic, working for any binary tree data objects, as long as you can provide functions (lambda functions will do) to get a nodes label as a String, and to get the left and right sub-nodes.
+3. There's a parameter to set the minimum horizontal space between node labels.
+4. Node labels are strings of arbitrary length.
+5. In addition to a method for printing a single tree, there's a method for printing a list of trees horizontally across the page (with a parameter for page width), using as many rows as necessary.
+6. There's an option to print trees with diagonal branches (diagonal unicode box drawing characters) or with horizontal branches (using unicode box drawing characters). The latter is more compact and makes tree levels more visually clear.
+7. It supports basic ANSI escape sequences for colored output to terminal.
+8. It works.
 
-Some demo/test programs are included.
+Some [demo/test programs](src/test/java) are included.
 
-The TreePrinter object has two methods for printing binary trees as ASCII text. PrintTree prints a single tree. PrintTrees prints a list of trees horizontally across the page, in multiple rows if necessary. 
+## Usage
 
-The TreePrinter object has a few settable parameters affecting how it prints trees.  A positive integer parameter 'hspace' specifies the minimum number of horizontal spaces between any two node labels in the tree. A boolean parameter 'squareBranches' determines whether the tree is drawn with horizontal branches (using ascii box drawing characters) or diagonal branches (using slash and backslash characters).  The boolean 'lrAgnostic' parameter only affects trees drawn with the ascii box drawing characters. Its effect is is that tree nodes with only a single subtree are drawn with a straight down vertical branch, providing no indication of whether it is a left or right subtree.
+### Gradle:
 
-A few test/demo programs are included.  For instance, the program EnumTrees can be used to print an enumeration of all binary trees of a given size.  All trees of size 5, labeled with number words (one, two, etc) is printed as:
+Use `sourceControl` block in your `settings.gradle.kts`
 
+```kotlin
+// in settings.gradle.kts:
+sourceControl {
+    // without the `uri(...)` if you use Groovy
+    gitRepository(
+        uri("https://github.com/billvanyo/tree_printer.git")
+    ) {
+        producesModule(
+            "tech.vanyo:tree_printer:1.1"
+        )
+    }
+}
 ```
-mvn compile 
-mvn exec:java -Dexec.mainClass="EnumTrees"
+
+and add the dependency in your buildscript `build.gradle.kts` dependencies block:
+
+```kotlin
+dependencies {
+    implementation(
+        "tech.vanyo:tree_printer:1.1"
+    )
+}
 ```
+
+## Details
+
+The TreePrinter object has two methods for printing binary trees as ASCII text. `printTree(tree)` prints a single tree.
+`printTrees(trees, lineWidth)` prints a list of trees horizontally across the page, in multiple rows if necessary.
+
+The TreePrinter object has a few settable parameters affecting how it prints trees:
+
+- A positive integer parameter `labelGap` specifies the minimum number of horizontal spaces between any two node labels in the tree.
+- `colGap` and `rowGap` specifies spacing between trees when using `printTrees(trees, lineWidth)` 
+- A boolean parameter `squareBranches` determines whether the tree is drawn with horizontal branches (using ascii box drawing characters) or diagonal branches (using slash and backslash characters). 
+- The boolean `lrAgnostic` parameter only affects trees drawn with square style. Its effect is that tree nodes with only a single subtree are drawn with a straight down vertical branch, providing no indication of whether it is a left or right subtree.
+- `usePlaceholder` replaces empty labels with placeholders
+
+## Examples
+
+A few test/demo programs are included. For instance, the program EnumTrees can be used to print an enumeration of all binary trees of a given size. All trees of size 5, labeled with number words (one, two, etc) is printed as:
+
+```bash
+# use gradlew.bat on windows
+./gradlew :testLogging --tests *EnumTrees
+```
+
 This produces output like:
+
 ```
 one           one         one          one        one       one         one       one          one      
   \             \           \            \          \         \           \         \            \      
@@ -81,14 +126,21 @@ one four    two four  one       one          two        three         three
                           \       /       one  three     \           /         
                          three  two                      two       one         
 ```
-RandomTree can be used to print a single randomly generated tree.  The following is an example of the same tree 
-printed 4 different ways, with horizontal spacing of 1 and of 3, and with diagonal and horizontal branches.  To 
-run this from the command line using maven type: 
+
+[RandomTree](src/test/java/RandomTree.java) can be used to print a single randomly generated tree. The following is an example of
+the
+same
+tree
+printed 4 different ways, with horizontal spacing of 1 and of 3, and with diagonal and horizontal branches. To
+run this from the command line using maven type:
+
 ```
-mvn compile 
-mvn exec:java -Dexec.mainClass="RandomTree"
+# use gradlew.bat on windows
+./gradlew :testLogging --tests *RandomTree
 ```
+
 This produces output like:
+
 ```
                    27        
              ┌─────┴─────┐   
@@ -182,10 +234,17 @@ This produces output like:
           14    16               
 
 ```
-There's a demo program that produces a tree diagram of all Collatz sequences 
-(https://en.wikipedia.org/wiki/Collatz_conjecture) of a given length.  This demonstrates an option to print trees
+
+There's a [demo program](src/test/java/CollatzTree.java) that produces a tree diagram of all Collatz sequences
+(https://en.wikipedia.org/wiki/Collatz_conjecture) of a given length. This demonstrates an option to print trees
 in such a way that if there is only a single subtree, it is treated the same regardless of whether it is a left
 or right subtree. This produces output like:
+
+```bash
+# use gradlew.bat on windows
+./gradlew :testLogging --tests *CollatzTree
+```
+
 ```
                                                        1                                 
                                                        │                                 

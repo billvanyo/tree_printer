@@ -1,3 +1,5 @@
+package tech.vanyo.treePrinter;
+
 public class TreeNode {
     private int value;
     private TreeNode left;

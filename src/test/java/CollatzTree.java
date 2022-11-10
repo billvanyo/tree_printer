@@ -1,26 +1,25 @@
+import org.junit.jupiter.api.Test;
+import tech.vanyo.treePrinter.TreeNode;
 import tech.vanyo.treePrinter.TreePrinter;
 
 public class CollatzTree {
 
     // prints tree diagram for tree representation of "reverse" Collatz sequences
-    public static void main(String[] args) {
+    @Test
+    public void testCollatzSequence() {
         TreeNode root;
 
-        root = collatzTree(15);
+        root = collatzTree(1, 1, 15);
         // Collatz Conjecture: for every positive integer X, there is some N such that X appears in collatzTree(N) 
 
         TreePrinter<TreeNode> printer = new TreePrinter<>(n -> ""+n.getValue(), n -> n.getLeft(), n -> n.getRight());
 
-        printer.setHspace(1);
+        printer.setLabelGap(1);
         printer.setSquareBranches(true);
         printer.setLrAgnostic(true);
         printer.printTree(root);
     }
 
-
-    private static TreeNode collatzTree(int depth) {
-        return collatzTree(1, 1, depth);
-    }
 
     private static TreeNode collatzTree(int start, int curLength, int maxLength) {
         TreeNode root = new TreeNode(start);

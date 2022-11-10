@@ -1,3 +1,5 @@
+import org.junit.jupiter.api.Test;
+import tech.vanyo.treePrinter.TreeNode;
 import tech.vanyo.treePrinter.TreePrinter;
 
 import java.util.ArrayList;
@@ -11,16 +13,19 @@ public class EnumDAGTrees {
     // treePrinter doesn't know the difference; it traverses the structure as a tree.
     // Also note that treePrinter doesn't detect cycles (don't give it graphs with cycles)
 
-    public static void main(String[] args) {
+    @Test
+    public void enumDAGTrees() {
 
         List<TreeNode> trees = enumTrees(7);
 
         /*
             We declare a TreePrinter object, parameterized with the type of tree object it will be printing (in this
-            case TreeNode), and call the TreePrinter constructor, providing lambda functions to get the TreeNode's
+            case tech.vanyo.treePrinter.TreeNode), and call the TreePrinter constructor, providing lambda functions to get the tech.vanyo.treePrinter.TreeNode's
             label as a String, and to get the left and right and right subtrees.
          */
-        TreePrinter<TreeNode> printer = new TreePrinter<>(n -> ""+n.getValue(), n -> n.getLeft(), n -> n.getRight());
+        TreePrinter<TreeNode> printer = new TreePrinter<>(n -> ""+n.getValue(),
+                TreeNode::getLeft,
+                TreeNode::getRight);
 
         // this prints trees in rows across the page
         printer.setSquareBranches(true);
@@ -28,6 +33,7 @@ public class EnumDAGTrees {
 
     }
 
+    @SuppressWarnings("unchecked")
     public static List<TreeNode> enumTrees(int n) {
         List<TreeNode>[] subProblems = new ArrayList[n + 1];
 
