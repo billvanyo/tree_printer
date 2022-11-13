@@ -1,3 +1,5 @@
+import org.junit.jupiter.api.Test;
+import tech.vanyo.treePrinter.TreeNode;
 import tech.vanyo.treePrinter.TreePrinter;
 
 import java.util.ArrayList;
@@ -8,7 +10,14 @@ public class EnumTrees {
     // This tests treePrinter by enumerating trees of a given size.
     // These trees are labelled with either ints or words for ints.
 
-    public static void main(String[] args) {
+    private TreePrinter<TreeNode> labelPrinter = new TreePrinter<>(
+        n -> labelForNode(n.getValue()),
+        TreeNode::getLeft,
+        TreeNode::getRight)
+        .setSquareBranches(true);
+
+    @Test
+    public void enumTrees() {
         List<TreeNode> trees = enumTrees(6);
 
         /*
@@ -16,9 +25,7 @@ public class EnumTrees {
             case TreeNode), and call the TreePrinter constructor, providing lambda functions to get the TreeNode's
             label as a String, and to get the left and right and right subtrees.
          */
-        TreePrinter<TreeNode> printer = new TreePrinter<>(n -> labelForNode(n.getValue()), n -> n.getLeft(), n -> n.getRight());
-        printer.setSquareBranches(true);
-        printer.printTrees(trees, 120);
+        labelPrinter.printTrees(trees, 120);
     }
 
     public static List<TreeNode> enumTrees(int treeSize) {
